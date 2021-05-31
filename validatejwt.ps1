@@ -12,9 +12,6 @@ param($Request, $TriggerMetadata)
 
 # Get JKU:
 [string]$jwkUri = $env:JWK_URI;
-if ($Request.Query.uri) {
-    $jwkUri = $Request.Query.uri;
-}
 
 # Write to the Azure Functions log stream:
 Write-Host "ValidateJwt function processed a request.";
