@@ -1,5 +1,5 @@
 # PSJwtMicroservices-azure
-Proof-of-concept Azure functions written in PowerShell that demonstrate creation and validation of a JSON Web Token via the PSJsonWebToken PowerShell module.
+Proof-of-concept Azure functions written in PowerShell that demonstrate creation and validation JSON Web Tokens as well as JSON Web Tokens via the PSJsonWebToken PowerShell module.
 
 ## Requirements
 An Azure function app and the PSJsonWebToken PowerShell module.
