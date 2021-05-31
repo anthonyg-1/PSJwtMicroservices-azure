@@ -9,3 +9,6 @@ Takes an API key and if valid, returns a JSON Web Token. The API key, private ke
 
 ### validatejwt
 Takes a JWT and validates it against a JWK set URI found in the configuration settings for the Azure function app.
+
+### getjwkset
+Looks to the configuration settings for a JWK set URI and adds our own JWK to this collection. This is potentially useful in the case where a service provider can only validate JSON Web Tokens against a single JSON Web Key set URI.
