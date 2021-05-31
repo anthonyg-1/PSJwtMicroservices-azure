@@ -22,7 +22,6 @@ try {
     # Get the existing JWK collection we wish to add to:
     $jwkCollection = Get-JwkCollection -Uri $jwkUri -ErrorAction Stop;
 
-
     # Convert base 64 string to byte array and ultimately to X509Certfifcate2 object:
     [byte[]]$certificateBytes = [Convert]::FromBase64String($base64Cert);
     $certificate = [X509Certificate2]::new($certificateBytes, $null);
