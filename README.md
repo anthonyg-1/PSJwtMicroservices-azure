@@ -5,7 +5,7 @@ Proof-of-concept Azure functions written in PowerShell that demonstrate creation
 An Azure function app and the PSJsonWebToken PowerShell module.
 
 ## Description
-The three PowerShell scripts in this repository represent three different Azure functions.
+The three PowerShell scripts in this repository represent three different Azure functions. Brief explanation of each below.
 
 ### getjwt
 Takes an API key and if valid, returns a JSON Web Token. The API key, private key to sign the JWT and claims for the token should be in Azure Key Vault. 
