@@ -1,4 +1,3 @@
-#-------------------------------------------------------------------------------------------------------------------------------------------
 using namespace System
 using namespace System.Net
 using namespace System.Security.Cryptography.X509Certificates
@@ -46,4 +45,3 @@ Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
         StatusCode = $statusCode;
         Body       = $body;
     })
-#-------------------------------------------------------------------------------------------------------------------------------------------
