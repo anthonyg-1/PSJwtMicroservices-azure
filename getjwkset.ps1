@@ -7,7 +7,7 @@ using namespace System.Security.Cryptography.X509Certificates
 # Input bindings are passed in via param block.
 param($Request, $TriggerMetadata)
 
-[string]$body = @{keys = $null} | ConvertTo-Json;
+[string]$body = @{keys = $null } | ConvertTo-Json;
 [HttpStatusCode]$statusCode = [HttpStatusCode]::OK;
 
 # Get JKU and public key:
@@ -30,17 +30,26 @@ try {
     $jwk = $certificate | New-JsonWebKey;
 
     # Add our JWK to the collection:
-    $jwkCollection+= $jwk;
+    $jwkCollection += $jwk;
 
     # Serialize and assign to the $body variable to return:
-    $jwkSet = @{keys=$jwkCollection};
+    $jwkSet = @{keys = $jwkCollection };
     $body = $jwkSet | ConvertTo-Json;
 }
 catch {
     $statusCode = [HttpStatusCode]::Forbidden;
 }
 
+$responseHeaders = @{'Content-Type' = 'application/json; charset=utf-8';
+    'Strict-Transport-Security'     = 'max-age=31536000; includeSubDomains';
+    'Content-Security-Policy'       = "default-src 'self'";
+    'X-Content-Type-Options'        = 'nosniff';
+    'X-Frame-Options'               = "SAMEORIGIN";
+    'Referrer-Policy'               = 'no-referrer-when-downgrade'
+}
+
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
         StatusCode = $statusCode;
         Body       = $body;
+        Headers    = $responseHeaders;
     })
