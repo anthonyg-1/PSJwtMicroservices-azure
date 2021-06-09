@@ -46,8 +46,16 @@ if ($key -eq $validationKey) {
     }
 }
 
-# Associate values to output bindings by calling 'Push-OutputBinding'.
+$responseHeaders = @{'Content-Type' = 'application/json; charset=utf-8';
+    'Strict-Transport-Security'     = 'max-age=31536000; includeSubDomains';
+    'Content-Security-Policy'       = "default-src 'self'";
+    'X-Content-Type-Options'        = 'nosniff';
+    'X-Frame-Options'               = "SAMEORIGIN";
+    'Referrer-Policy'               = 'no-referrer-when-downgrade'
+}
+
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
         StatusCode = $statusCode;
         Body       = $body;
+        Headers    = $responseHeaders;
     })
