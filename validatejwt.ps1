@@ -27,6 +27,9 @@ try {
             $body = @{status = "Authenticated" } | ConvertTo-Json;
         }
     }
+    else {
+        throw "Missing Bearer token";
+    }
 }
 catch {
     $statusCode = [HttpStatusCode]::Forbidden;
