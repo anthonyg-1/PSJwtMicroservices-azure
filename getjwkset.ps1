@@ -7,10 +7,13 @@ using namespace System.Security.Cryptography.X509Certificates
 # Input bindings are passed in via param block.
 param($Request, $TriggerMetadata)
 
-[string]$body = @{keys = $null } | ConvertTo-Json;
-[HttpStatusCode]$statusCode = [HttpStatusCode]::OK;
+# Default return value and HTTP status code:
+[string]$body = @{status = "Access denied" } | ConvertTo-Json;
+[HttpStatusCode]$statusCode = [HttpStatusCode]::Forbidden;
 
+# Environment variables: 
 $base64Cert = $env:JWT_PFX;
+$responseHeaders = $env:RESPONSE_HEADERS | ConvertFrom-Json -AsHashtable;
 
 # Write to the Azure Functions log stream.
 Write-Host "jwks function processed a request.";
@@ -29,15 +32,8 @@ try {
     $body = $jwkSet;
 }
 catch {
-    $statusCode = [HttpStatusCode]::Forbidden;
-}
-
-$responseHeaders = @{'Content-Type' = 'application/json; charset=utf-8';
-    'Strict-Transport-Security'     = 'max-age=31536000; includeSubDomains';
-    'Content-Security-Policy'       = "default-src 'self'";
-    'X-Content-Type-Options'        = 'nosniff';
-    'X-Frame-Options'               = "SAMEORIGIN";
-    'Referrer-Policy'               = 'no-referrer-when-downgrade'
+    $errorMessage = $_.Exception.Message;
+    Write-Host $errorMessage;
 }
 
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
