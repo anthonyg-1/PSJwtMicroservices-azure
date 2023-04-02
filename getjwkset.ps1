@@ -11,14 +11,13 @@ param($Request, $TriggerMetadata)
 [string]$body = @{status = "Access denied" } | ConvertTo-Json;
 [HttpStatusCode]$statusCode = [HttpStatusCode]::Forbidden;
 
-# Environment variables: 
-$base64Cert = $env:JWT_PFX;
+# Environment variables:
+$base64Cert = $env:PUBLIC_KEY;
 $responseHeaders = $env:RESPONSE_HEADERS | ConvertFrom-Json -AsHashtable;
 
 # Write to the Azure Functions log stream.
 Write-Host "jwks function processed a request.";
 
-$jwkCollection = $null;
 try {
     # Convert base 64 string to byte array and ultimately to X509Certfifcate2 object:
     [byte[]]$certificateBytes = [Convert]::FromBase64String($base64Cert);
@@ -28,12 +27,20 @@ try {
     $jwkSet = $certificate | New-JsonWebKeySet -Compress;
 
     $statusCode = [HttpStatusCode]::OK;
-    
+
     $body = $jwkSet;
 }
 catch {
     $errorMessage = $_.Exception.Message;
     Write-Host $errorMessage;
+}
+
+$responseHeaders = @{'Content-Type' = 'application/json; charset=utf-8';
+    'Strict-Transport-Security'     = 'max-age=31536000; includeSubDomains';
+    'Content-Security-Policy'       = "default-src 'self'";
+    'X-Content-Type-Options'        = 'nosniff';
+    'X-Frame-Options'               = "SAMEORIGIN";
+    'Referrer-Policy'               = 'no-referrer-when-downgrade'
 }
 
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
