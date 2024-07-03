@@ -13,7 +13,6 @@ param($Request, $TriggerMetadata)
 
 # Environment variables:
 $base64Cert = $env:PUBLIC_KEY;
-$responseHeaders = $env:RESPONSE_HEADERS | ConvertFrom-Json -AsHashtable;
 
 # Write to the Azure Functions log stream.
 Write-Host "jwks function processed a request.";
